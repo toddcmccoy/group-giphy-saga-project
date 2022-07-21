@@ -6,23 +6,27 @@ import axios from 'axios';
 function Search () {
     const dispatch = useDispatch();
 
-    const search = useSelector(store => store.searchReducer);
+    const [input, setInput]= useState('');
+
+
+    const searchList = useSelector(store => store.searchReducer);
 
     
 
     useEffect(() => {
-        getSearch();
+        // getSearch();
+        
     },[])
 
-    const handleSearch= () => {
+    // const handleSearch= (event) => {
         
-    }
+    // }
 
     const getSearch = () => {
-        dispatch({ type: 'FETCH_SEARCH'})
+        dispatch({ type: 'FETCH_SEARCH', payload: input})
+        console.log('in getSearch, payload:', input);
+        setInput('');
     }
-
-    const [input, setInput]= useState('');
 
     return (
         <div>
@@ -30,11 +34,17 @@ function Search () {
 
             </header>
 
-            <input type='text' onChange={(event)=>setInput(event.target.value)}></input>
+            <input type='text' value={input} onChange={(event)=>setInput(event.target.value)}></input>
 
             <button onClick={getSearch}>Search</button>
-
-            <img src={}/>
+        {searchList.map((search)=> {
+            return(
+                <div key={search.id} className="gifBox">
+                <img src={search.images?.original.url}/>
+                </div>
+            );
+        })}
+        
 
         </div>
     )

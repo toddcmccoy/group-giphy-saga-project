@@ -8,7 +8,7 @@ import { takeEvery, put } from 'redux-saga/effects';
 import axios from 'axios';
 import App from './components/App/App';
 
-const searchReducer = (state = {}, action) => {
+const searchReducer = (state = [], action) => {
     if(action.type === 'SET_SEARCH') {
         return action.payload;
     }
@@ -24,12 +24,15 @@ const searchReducer = (state = {}, action) => {
 
 
 
-function* fetchSearch() {
+function* fetchSearch(action) {
     try {
-        const searchResponse = yield axios.get('/api/search');
-        yield put({ type: 'SET_SEARCH', payload: searchResponse.data });
+        const searchInput = action.payload;
+        console.log('in fetchSearch, searchInput', searchInput)
+
+        const response = yield axios.get(`/api/search/${searchInput}`);
+        yield put({ type: 'SET_SEARCH', payload: response.data.data});
     } catch (error) {
-        console.log('Error fetching elements:', error);
+        console.log('Error fetching in fetchSearch:', error);
     }
 }
 
