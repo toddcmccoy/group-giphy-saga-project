@@ -28,6 +28,10 @@ function Search () {
         setInput('');
     }
 
+    const addFavorite = (event) => {
+        dispatch({ type:'ADD_FAVORITE', payload: event})
+    }
+
     return (
         <div>
             <header>
@@ -41,6 +45,8 @@ function Search () {
             return(
                 <div key={search.id} className="gifBox">
                 <img src={search.images?.original.url}/>
+                <br />
+                <button onClick={(event) => addFavorite(search.images?.original.url)}>Add Favorite</button>
                 </div>
             );
         })}

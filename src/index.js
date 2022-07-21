@@ -8,22 +8,22 @@ import { takeEvery, put } from 'redux-saga/effects';
 import axios from 'axios';
 import App from './components/App/App';
 
+// GET search reducer
 const searchReducer = (state = [], action) => {
     if(action.type === 'SET_SEARCH') {
         return action.payload;
     }
     return state;
 }
+// GET favorite reducer
+const favoritesReducer = (state = {}, action) => {
+    if(action.type === 'SET_FAVORITES') {
+        return action.payload;
+    }
+    return state;
+}
 
-// const favoritesReducer = (state = {}, action) => {
-//     if(action.type === 'SET_FAVORITES') {
-//         return action.payload;
-//     }
-//     return state;
-// }
-
-
-
+// GET search saga
 function* fetchSearch(action) {
     try {
         const searchInput = action.payload;
@@ -36,7 +36,8 @@ function* fetchSearch(action) {
     }
 }
 
-function* postFavorites(action) {
+// POST search favorite saga
+function* postFavorite(action) {
     try {
         yield axios.post('/api/favorite', action.payload);
         yield put({ type: 'FETCH_SEARCH' });
@@ -49,7 +50,7 @@ function* postFavorites(action) {
 
 function* watcherSaga() {
     yield takeEvery('FETCH_SEARCH', fetchSearch);
-    yield takeEvery('ADD_FAVORITES', postFavorites );
+    yield takeEvery('ADD_FAVORITE', postFavorite );
 }
 
 const sagaMiddleware = createSagaMiddleware();
