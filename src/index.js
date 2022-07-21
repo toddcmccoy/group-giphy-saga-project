@@ -23,6 +23,14 @@ const favoritesReducer = (state = [], action) => {
     return state;
 }
 
+// GET categories reducer
+const categoriesReducer = (state = [], action) => {
+    if(action.type === 'SET_CATEGORIES') {
+        return action.payload;
+    }
+    return state;
+}
+
 // GET search saga
 function* fetchSearch(action) {
     try {
@@ -36,7 +44,7 @@ function* fetchSearch(action) {
     }
 }
 
-
+// GET favorites saga
 function* fetchFavorites(action) {
     try {
         // console.log('response in fetchFavorites', response);
@@ -49,6 +57,19 @@ function* fetchFavorites(action) {
     }
 }
 
+
+// GET categories saga
+function* fetchCategories(action) {
+    try {
+        // console.log('response in fetchCategories', response);
+        const response = yield axios.get(`/api/category`);
+        yield put({ type: 'SET_CATEGORIES', payload: response.data});
+        // yield console.log('response in fetchCategories', response.data);
+
+    } catch (error) {
+        console.log('Error fetching in fetchCategories:', error);
+    }
+}
 // POST search favorite saga
 function* postFavorite(action) {
     try {
@@ -60,21 +81,12 @@ function* postFavorite(action) {
     }
 }
 
-// function* fetchFavorites(response) {
-//     try {
-//         console.log('response.data in fetchFavorites', response.data);
-//         const response = yield axios.get(`/api/favorite`);
-//         yield put({ type: 'SET_FAVORITES', payload: response.data});
-//     } catch (error) {
-//         console.log('Error fetching in fetchFavorites:', error);
-//     }
-// }
-
 
 function* watcherSaga() {
     yield takeEvery('FETCH_SEARCH', fetchSearch);
     yield takeEvery('ADD_FAVORITE', postFavorite );
     yield takeEvery('FETCH_FAVORITES', fetchFavorites );
+    yield takeEvery('FETCH_CATEGORIES', fetchCategories);
 }
 
 const sagaMiddleware = createSagaMiddleware();
@@ -83,7 +95,8 @@ const sagaMiddleware = createSagaMiddleware();
 const storeInstance = createStore(
     combineReducers({
         searchReducer,
-        favoritesReducer
+        favoritesReducer,
+        categoriesReducer
     }),
     applyMiddleware(sagaMiddleware, logger),
 );
