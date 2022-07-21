@@ -16,7 +16,7 @@ const searchReducer = (state = [], action) => {
     return state;
 }
 // GET favorite reducer
-const favoritesReducer = (state = {}, action) => {
+const favoritesReducer = (state = [], action) => {
     if(action.type === 'SET_FAVORITES') {
         return action.payload;
     }
@@ -36,21 +36,45 @@ function* fetchSearch(action) {
     }
 }
 
+
+function* fetchFavorites(action) {
+    try {
+        // console.log('response in fetchFavorites', response);
+        const response = yield axios.get(`/api/favorite`);
+        yield put({ type: 'SET_FAVORITES', payload: response.data});
+        // yield console.log('response in fetchFavorites', response.data.data);
+
+    } catch (error) {
+        console.log('Error fetching in fetchFavorites:', error);
+    }
+}
+
 // POST search favorite saga
 function* postFavorite(action) {
     try {
-        yield axios.post('/api/favorite', action.payload);
-        yield put({ type: 'FETCH_SEARCH' });
+        const favorite = action.payload
+        yield axios.post('/api/favorite', {favorite});
+        // yield put({ type: 'FETCH_SEARCH' });
     } catch (error) {
         console.log('Error posting element', error);
     }
 }
 
+// function* fetchFavorites(response) {
+//     try {
+//         console.log('response.data in fetchFavorites', response.data);
+//         const response = yield axios.get(`/api/favorite`);
+//         yield put({ type: 'SET_FAVORITES', payload: response.data});
+//     } catch (error) {
+//         console.log('Error fetching in fetchFavorites:', error);
+//     }
+// }
 
 
 function* watcherSaga() {
     yield takeEvery('FETCH_SEARCH', fetchSearch);
     yield takeEvery('ADD_FAVORITE', postFavorite );
+    yield takeEvery('FETCH_FAVORITES', fetchFavorites );
 }
 
 const sagaMiddleware = createSagaMiddleware();
@@ -59,7 +83,7 @@ const sagaMiddleware = createSagaMiddleware();
 const storeInstance = createStore(
     combineReducers({
         searchReducer,
-        // favoritesReducer
+        favoritesReducer
     }),
     applyMiddleware(sagaMiddleware, logger),
 );

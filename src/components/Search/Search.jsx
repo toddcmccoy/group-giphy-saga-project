@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import SearchItem from '../SearchItem/SearchItem';
 
 function Search () {
     const dispatch = useDispatch();
@@ -28,9 +29,9 @@ function Search () {
         setInput('');
     }
 
-    const addFavorite = (event) => {
-        dispatch({ type:'ADD_FAVORITE', payload: event})
-    }
+    // const addFavorite = (event) => {
+    //     dispatch({ type:'ADD_FAVORITE', payload: event})
+    // }
 
     return (
         <div>
@@ -40,14 +41,15 @@ function Search () {
 
             <input type='text' value={input} onChange={(event)=>setInput(event.target.value)}></input>
 
-            <button onClick={getSearch}>Search</button>
-        {searchList.map((search)=> {
+            <button id='search' onClick={getSearch}>Search</button>
+        {searchList.map((searchItem)=> {
             return(
-                <div key={search.id} className="gifBox">
-                <img src={search.images?.original.url}/>
-                <br />
-                <button onClick={(event) => addFavorite(search.images?.original.url)}>Add Favorite</button>
-                </div>
+                <SearchItem key={searchItem.id} searchItem = {searchItem} />
+            //     <div key={search.id} className="gifBox">
+            //     <img src={search.images?.original.url}/>
+            //     <br />
+            //     <button onClick={(event) => addFavorite(search.images?.original.url)} id='favorite'>Add Favorite</button>
+            //     </div>
             );
         })}
         

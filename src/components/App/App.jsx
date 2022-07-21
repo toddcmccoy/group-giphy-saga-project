@@ -9,7 +9,10 @@ import { HashRouter as Router, Route, Link } from 'react-router-dom';
 import Search from '../Search/Search';
 import './App.css';
 import Favorites from '../Favorites/Favorites'
+
+
 function App(props) {
+  
   return (
     <Router>
       <header>
